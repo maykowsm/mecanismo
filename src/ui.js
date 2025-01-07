@@ -193,6 +193,9 @@ function addControle(name, value){
         inputValue.value = Math.round(event.target.value * 100 ) / 100
 
         dim[refs.indexOf(name)] = Math.round(event.target.value * 100 ) / 100
+
+        const mecanismo = new Mecanismo();
+        pointsPercurso = processPercurso(mecanismo)
         processMecanismo()
     })
 

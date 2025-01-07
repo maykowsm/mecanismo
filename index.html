@@ -71,7 +71,7 @@
             text-align: center;
         }
         #viewSliders{
-            height: 400px;
+            height: 450px;
             overflow-y: scroll;
         }
         .unidadeInput{
@@ -220,6 +220,15 @@
                     <button class="btn btnHorizontal" id="valoresPadrao">Valores Padrão</button>
                     
                 </div>
+
+                <div>
+                    <h4 style="text-align: center;">Percurso vertical</h4>
+                    <div id="chartDiv1" style="width: 300px; height:200px;"></div>
+
+                    <h4 style="text-align: center;">Percurso Horizontal</h4>
+                    <div id="chartDiv2" style="width: 300px; height:200px;"></div>
+                </div>
+                
                 
             </div>
         </section>
@@ -227,10 +236,83 @@
         
     </body>
     <script>
+
+        function makeGraphicY(percurso, pos){
+            const chart1 = new JSC.Chart("chartDiv1", {
+            
+                type: "line",
+                debug: true,
+                legend_visible: false,
+                yAxis_label_text: "Posição",
+                xAxis_label_text: "Ângulo",
+                legend_position:'bottom right',
+                xAxis_scale_type: "auto",
+                series: [
+                    {
+                    name: "Percurso",
+                    defaultPoint_marker: { size: 0 },
+                    points: percurso
+                    },
+
+                    // {
+                    // name: "Posição atual",
+                    // defaultPoint_marker: { size: 8 },
+                    // points: pos
+                    // },
+
+                    
+                ]
+            })
+
+            // chart1.options({
+
+            //     series: [
+            //         {
+            //         name: "Percurso",
+            //         defaultPoint_marker: { size: 0 },
+            //         points: percurso
+            //         }
+
+            //         // {
+            //         // name: "Posição atual",
+            //         // defaultPoint_marker: { size: 8 },
+            //         // points: pos
+            //         // },
+
+                    
+            //     ]
+            // })
+        }
         
          
-        
-        
+        function makeGraphicX(percurso, pos){
+            var chart2 = new JSC.Chart("chartDiv2", {
+                type: "line",
+                debug: true,
+                legend_visible: false,
+                yAxis_label_text: "Posição",
+                xAxis_label_text: "Ângulo",
+                legend_position:'bottom right',
+                xAxis_scale_type: "auto",
+                series: [
+                        {
+                        name: "Percurso",
+                        defaultPoint_marker: { size: 0 },
+                        points: percurso
+                        },
+
+                        // {
+                        // name: "Posição atual",
+                        // defaultPoint_marker: { size: 8 },
+                        // points: pos
+                        // },
+
+                        
+                    ]
+            })
+            
+            
+        }
         
     </script>
 
@@ -242,10 +324,15 @@
         const dimDefaut = [41.5, 50, 55.8, 40.1, 39.4, 39.3, 65.7, 36.7, 49, 61.9, 38, 7.8, 15];
         var dim = [41.5, 50, 55.8, 40.1, 39.4, 39.3, 65.7, 36.7, 49, 61.9, 38, 7.8, 15];
         const refs = ["a","b","c","d","e","f","g","h","i","j","x", "y", "m"]
+        var pointsPercurso = []
         var ang = 0
         var velocidade = 100
         var girar = false
         var animation
+        var positionP7X = []
+        var positionP7Y = []
+        var percursoY = []
+        var percursoX = []
 
         // parametros da visualização
         var dimCanva = {x: 400, y: 400}
@@ -276,17 +363,28 @@
         
 
         makeSliders()
-        updateAngView()     
+        updateAngView() 
+
+        const mecanismo = new Mecanismo();
+        pointsPercurso = processPercurso(mecanismo)
+
         processMecanismo()
         
         function processMecanismo(){
             clearCanva(screen, backgroundCanva)
             const mecanismo = new Mecanismo();
             const res = mecanismo.calc(dim, ang);
+            
+            positionP7X = [{x: ang, y: res.p7[0]}]
+            positionP7Y = [{x: ang, y: res.p7[1]}]
+
+            
+
+            // makeGraphicY(percursoY, positionP7Y)
+            // makeGraphicX(percursoX, positionP7X)
             drawMecanismo(screen, "green" , mecanismo.getBar(), res,origin, scale)
 
-            if(viewTracado){
-                const pointsPercurso = processPercurso(mecanismo)
+            if(viewTracado){                
                 drawPercurso(screen, corPercurso, pointsPercurso, origin, scale)
             }
             
@@ -297,10 +395,19 @@
         // Gera os pontos do percurso para a configuração atual de barras
         function processPercurso(mecanismo){
             let points = []
+            percursoX = []
+            percursoY = []
             for(let i = 0; i< 361; i++){
                 let res = mecanismo.calc(dim, i)
+                
+                percursoX.push({x: i, y: res.p7[0]})
+                percursoY.push({x: i, y: res.p7[1]})
+
                 points.push(res["p7"])
             }
+
+            makeGraphicX(percursoX, [positionP7X])
+            makeGraphicY(percursoY, [positionP7Y])
 
             return points
         }
