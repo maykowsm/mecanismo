@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Mecanismo</title>        
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-        <link rel="shortcut icon" type="imagex/png" href="Assets/icon.png">
+        <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+        <link rel="icon" type="imagex/png" href="Assets/icon.png">
     </head>
 
     <style>
@@ -84,16 +84,20 @@
             justify-content: space-between;
 
         }
-        .btn{
+        .btnHorizontal{
             width: 100%;
             height: 40px;
+            margin-top: 10px;
+        }
+        .btn{
+            
             border: none;
             background-color:dodgerblue;
             cursor: pointer;
             border-radius: 5px;
             color: white;
             font-size: 12pt;
-            margin-top: 10px;
+            
         }
         .btn:hover{
             background-color:#1b80e6;
@@ -101,71 +105,125 @@
         .btn:active{
             background-color:dodgerblue;
         }
+        section{
+            background-color: white;
+        }
+        menu{
+            display: flex;
+            flex-direction: row;
+            gap: 3px;
+            /* background-color: white; */
+            margin-bottom: 0px;
+            width:max-content;
+            margin: auto;
+            margin-top: 10px;
+            
+        }
+        
+        menu li{
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px 5px 0px 0px;
+            border-top: 3px solid gray;
+            list-style: none;
+            cursor: pointer;
+        }
+        menu li:hover{
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px 5px 0px 0px;
+            border-top: 3px solid rgb(149, 202, 255);
+            list-style: none;
+            cursor: pointer;
+        }
+
+        article p{
+            text-indent: 20px;
+        }
 
     </style>
 
     <body>
-        <h2 style="text-align: center;">Mecanismo de Theo Jansen</h2>
-        <div id="view">
+        
+        <menu>
             
-            <div>
-                <canvas id="screen" width="400" height="400"></canvas>
+            
+            <li>Mecanismo</li>
+            <!-- <li>Mecanismo</li> -->
+            
+        </menu>
 
-                <div id="inputView">
-                    <div id="inputCheckbox">                       
-                        <div>
-                            <input type="checkbox" name="viewBarCheck"  id="viewBarCheck" checked onchange = updateViewBar()>
-                            <label for="viewBarCheck">Barras</label>
+        <section>
+            
+            <div id="view">
+                <button id="viewExplicacao" value="false" class="btn" style="writing-mode: vertical-rl; transform: rotate(180deg);">Mecanismo de Theo Jansen</button>
+                <article id="explicacao" style="width: 300px; height: 400px;padding: 10px; text-align: justify; display: none; overflow-y: scroll;">
+                    <h2  style="text-align: center; justify-self: left;">Mecanismo de Theo Jansen</h2>
+                    <p>O mecanismo de Theo Jansen é como um sistema de alavancas que imita o movimento de uma perna. Ele é feito de várias hastes conectadas umas às outras. Essas hastes giram em torno de pontos de ligação, como dobradiças.</p>    
+                    <p>Quando uma parte do mecanismo gira (como uma manivela), isso faz com que as outras hastes se mexam de um jeito sincronizado. Esse movimento é o que faz o mecanismo "andar". O segredo está nas proporções das hastes: elas foram projetadas de um jeito muito especial para imitar o movimento natural de uma caminhada.</p>
+                    <p>Assim, mesmo sem usar motor, ele transforma o giro de uma peça no movimento de "passos"! 🦵</p>
+                    
+                </article>
+                <div>
+                    <canvas id="screen" width="400" height="400"></canvas>
+    
+                    <div id="inputView">
+                        <div id="inputCheckbox">                       
+                            <div>
+                                <input type="checkbox" name="viewBarCheck"  id="viewBarCheck" checked onchange = updateViewBar()>
+                                <label for="viewBarCheck">Barras</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="viewRefCheck" id="viewRefCheck" checked  onchange = updateViewText()>
+                                <label for="viewRefCheck">Referencias</label>
+                            </div>
+    
+                            <div>
+                                <input type="checkbox" name="viewPointCheck" id="viewPointCheck" checked onchange = updateViewPoints()>
+                                <label for="viewPointCheck">Pontos</label>
+                            </div>
+                           
                         </div>
-                        <div>
-                            <input type="checkbox" name="viewRefCheck" id="viewRefCheck" checked  onchange = updateViewText()>
-                            <label for="viewRefCheck">Referencias</label>
+    
+                        <div style="display: flex; flex-direction: row; margin-top: 10px; margin-bottom: 10px; gap: 10px">
+                            <div >
+                                <input type="checkbox" name="girarCheck" id="girarCheck" >
+                                <label for="girarCheck">Girar</label>
+                            </div>
+    
+                            <label style="margin-left: 5px;" >Velocidade:</label>
+                            <input class="" type="range" min="1" max="250" step="1" value="100" id="input_velocidade">
                         </div>
-
-                        <div>
-                            <input type="checkbox" name="viewPointCheck" id="viewPointCheck" checked onchange = updateViewPoints()>
-                            <label for="viewPointCheck">Pontos</label>
-                        </div>
-                       
+                        
                     </div>
-
-                    <div style="display: flex; flex-direction: row; margin-top: 10px; margin-bottom: 10px; gap: 10px">
-                        <div >
-                            <input type="checkbox" name="girarCheck" id="girarCheck" >
-                            <label for="girarCheck">Girar</label>
+                    <div style="display: flex; flex-direction: row; gap: 10px;">
+                        <div>
+                            <label  for="angView">Angulo :</label>
+                            <input class="inputMinMax" type="text" name="angView" id="angView">
                         </div>
-
-                        <label style="margin-left: 5px;" >Velocidade:</label>
-                        <input class="" type="range" min="1" max="250" step="1" value="100" id="input_velocidade">
+    
+                        <div>
+                            <input type="checkbox" name="viewPercursoCheck" id="viewPercursoCheck" checked>
+                            <label for="viewPercursoCheck">Percurso</label>
+                        </div>
+                        
                     </div>
                     
+    
                 </div>
-                <div style="display: flex; flex-direction: row; gap: 10px;">
-                    <div>
-                        <label  for="angView">Angulo :</label>
-                        <input class="inputMinMax" type="text" name="angView" id="angView">
+                
+                <div>
+                    
+                    <div id="viewSliders">                   
+                        <!-- Recebe os slides de controle -->
                     </div>
-
-                    <div>
-                        <input type="checkbox" name="viewPercursoCheck" id="viewPercursoCheck" checked>
-                        <label for="viewPercursoCheck">Percurso</label>
-                    </div>
+                    <button class="btn btnHorizontal" id="valoresPadrao">Valores Padrão</button>
                     
                 </div>
                 
-
             </div>
-            
-            <div>
-                
-                <div id="viewSliders">                   
-                    <!-- Recebe os slides de controle -->
-                </div>
-                <button class="btn" id="valoresPadrao">Valores Padrão</button>
-                
-            </div>
-            
-        </div>
+        </section>
+        
         
     </body>
     <script>

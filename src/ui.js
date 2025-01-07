@@ -1,5 +1,13 @@
 
-
+document.getElementById("viewExplicacao").addEventListener("click", event=>{
+    if(event.target.value == "false"){
+        event.target.value = "true"
+        document.getElementById("explicacao").style.display = "block"
+    }else{
+        event.target.value = "false"
+        document.getElementById("explicacao").style.display = "none"
+    }
+})
 
 document.getElementById("angView").addEventListener("change", event=>{
     ang = event.target.value
